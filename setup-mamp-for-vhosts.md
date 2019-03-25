@@ -1,6 +1,6 @@
 # Setup MAMP for virtualhosts
 
-Configure MAMP once and the [create-wordpress](#) script walks you through everything else. There is no faster way to get a local development environment setup!
+Configure MAMP once and then run [create-wordpress](#) as many times as your little heart desires! I don't know of a faster way to get a local Wordpress dev environment setup.
 
 ### Get MAMP
 

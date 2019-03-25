@@ -4,6 +4,7 @@ DOT_FILE="$HOME/.wordpress-base"
 WORDPRESS_REPO="git@github.com:WordPress/WordPress.git"
 ETC_HOSTS="/etc/hosts"
 MAMP="/applications/MAMP/conf/apache/extra/httpd-vhosts.conf"
+MAMP_MYSQL="/applications/MAMP/Library/bin/mysql"
 LOCAL_IP="127.0.0.1"
 R='\e[1;35m'
 B='\e[0;36m'
@@ -12,12 +13,12 @@ LBBG='\e[104m'
 N=$(tput sgr0)
 
 function banner() {
-    printf "\n                                                                         \n"
+    printf "\n\n"
     printf ${LBBG}
     printf "\n                                                                           "
-    printf "\n  WordPress Configurator Script V 0.4.2                                      "
+    printf "\n  WordPress Configurator Script V 0.4.2                                    "
     printf "\n  ---------------------------------------------------------------------- \n"
-    printf "  This script sets up a new WordPress project.                              "
+    printf "  This script sets up a new WordPress project.                               "
     printf "\n  ---------------------------------------------------------------------- \n"
     printf "  Author: MotoRossi (hello@motorossi.me)                                   \n"
     printf "                                                                           \n"
@@ -147,21 +148,25 @@ function database_variables() {
         return
     fi
 
-    printf "   ${G}Enter a new database username:${N}"
+    printf "   ${G}Default local MySQL username is 'root':${N}\n"
+    printf "\n ${G}Just type 'root' or hit enter. You'll change it in production.${N}\n"
+    printf "\n ${G}Enter a new database username:${N}"
     read DATABASE_USERNAME
 
     if [ ! $DATABASE_USERNAME ] || [ $DATABASE_USERNAME == "" ]; then
-        log "\n${R}Try again${N}"
-        database_variables
+        log "\n${R}Defaults to 'root\n'${N}"
+        set DATABASE_USERNAME="root"
         return
     fi
 
-    printf "   ${G}Enter a new database password:${N}"
+    printf "   ${G}Same story. Default local MySQL password is 'root':${N}\n"
+    printf "\n ${G}Just type 'root' or hit enter. You'll change it in production.${N}\n"
+    printf "\n ${G}Enter a new database password:${N}"
     read DATABASE_PASSWORD
 
     if [ ! $DATABASE_PASSWORD ] || [ $DATABASE_PASSWORD == "" ]; then
-        log "\n${R}Try again${N}"
-        database_variables
+        log "\n${R}Defaults to 'root'\n'${N}"
+        set DATABASE_PASSWORD="root"
         return
     fi
 
@@ -173,6 +178,15 @@ function database_variables() {
         database_variables
         return
     fi
+}
+
+function create_database() {
+    printf "\n  ----------------------------------------------------------------------  \n"
+    printf "   \n"
+    printf "   ${G}Creating new MySQL database in MAMP using wp-config.php settings.${N}\n"
+    printf "   \n"
+    printf "\n  ----------------------------------------------------------------------  \n"
+    echo "CREATE DATABASE $DATABASE_NAME; GRANT ALL ON $DATABASE_NAME.* TO '$DATABASE_USERNAME'@'localhost';" | $MAMP_MYSQL -u$DATABASE_USERNAME -p$DATABASE_PASSWORD
 }
 
 function find_replace() {
@@ -211,6 +225,7 @@ create_config
 database_variables
 find_replace
 replace_salt
+create_database
 set_vhost
 set_etc_host
 completed_notice
