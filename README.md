@@ -11,7 +11,7 @@ Before anyone says it--yes, I know Wordpress has a nice cli, and yes I also have
 **requirements:**
 
 You need MAMP configured to allow virtualhosts and symlinks. 
-There's a 5 minute tutorial for that **[right here in this repo]()**. 
+There's a 5 minute tutorial for that **[right here in this repo](https://github.com/CorradoRossi/roll-your-own-wp-cli/blob/master/setup-mamp-for-vhosts.md)**. 
 
 **Simplest way to use:**
 
